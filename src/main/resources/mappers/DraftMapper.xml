@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.DraftMapper">
+	<select id="findByMid" resultMap="StandardResultMap">
+		SELECT * FROM draft WHERE m_id = #{mId}
+	</select>
+	<select id="findLastDraft" resultMap="StandardResultMap">
+		SELECT * FROM draft ORDER BY d_id DESC LIMIT 1
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="d_id" parameterType="test.myblog.model.Draft">
+		INSERT INTO draft (d_content, d_title, m_id, t_id) VALUES (#{d_content}, #{d_title}, #{m.m_id}, #{t.t_id})
+	</insert>
+	<delete id="deleteByDidAndMid">
+		DELETE FROM draft WHERE d_id = #{dId} AND m_id = #{mId}
+	</delete>
+	<update id="updateByDidAndMid" parameterType="test.myblog.model.Draft">
+		UPDATE draft SET d_content = #{d_content}, d_title = #{d_title}, t_id = #{t.t_id}  WHERE d_id = #{d_id} AND m_id = #{m.m_id}
+	</update>
+	<sql id="memberEntityFields">
+        m_id, m_about, m_authority, m_birthday, m_ctime, m_gender, m_ltime, m_name, m_password, m_pic, m_username
+    </sql>
+    <sql id="tagEntityFields">
+        t_id, t_name, t_pic
+    </sql>
+	<resultMap id="StandardResultMap" type="test.myblog.model.Draft">
+		<id column="d_id" property="d_id"/>
+		<result column="d_title" property="d_title"/>
+        <result column="d_content" property="d_content"/>
+        <association column="t_id" property="t" select="test.myblog.mapper.TagMapper.findById"/>
+		<association column="m_id" property="m" select="test.myblog.mapper.MemberMapper.findById"/>
+	</resultMap>
+</mapper>

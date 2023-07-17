@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.MemberMapper">
+	<select id="findById" resultMap="StandardResultMap">
+		SELECT * FROM member WHERE m_id = #{m_id}
+	</select>
+	<select id="findAll" resultMap="StandardResultMap">
+		SELECT * FROM member
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="m_id" parameterType="test.myblog.model.Member">
+		INSERT INTO member (m_about, m_authority, m_birthday, m_ctime, m_gender, m_ltime, m_name, m_password, m_pic, m_username) VALUES (#{m_about}, #{m_authority}, #{m_birthday}, #{m_ctime}, #{m_gender}, #{m_ltime}, #{m_name}, #{m_password}, #{m_pic}, #{m_username})
+	</insert>
+	<select id="findMemberByMusername" resultMap="StandardResultMap">
+		SELECT * FROM member WHERE m_username = #{m_username}
+	</select>
+	<select id="findIdByUsername" resultType="Integer">
+		SELECT m_id FROM member WHERE m_username = #{m_username}
+	</select>
+	<update id="updateMemberInfoWithPasswordPic">
+		UPDATE member SET m_name = #{m_name}, m_password = #{m_password}, m_birthday = #{m_birthday}, m_gender = #{m_gender}, m_pic = #{m_pic} WHERE m_id = #{m_id}
+	</update>
+	<resultMap id="StandardResultMap" type="test.myblog.model.Member">
+		<id column="m_id" property="m_id"/>
+		<result column="m_about" property="m_about"/>
+        <result column="m_authority" property="m_authority"/>
+        <result column="m_birthday" property="m_birthday"/>
+        <result column="m_ctime" property="m_ctime"/>
+        <result column="m_gender" property="m_gender"/>
+        <result column="m_ltime" property="m_ltime"/>
+        <result column="m_name" property="m_name"/>
+        <result column="m_password" property="m_password"/>
+        <result column="m_pic" property="m_pic"/>
+        <result column="m_username" property="m_username"/>
+        <collection column="m_id" property="articles" select="test.myblog.mapper.ArticleMapper.findById"/>
+        <collection column="m_id" property="comments" select="test.myblog.mapper.CommentMapper.findById"/>
+	</resultMap>
+</mapper>

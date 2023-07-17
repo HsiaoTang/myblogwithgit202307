@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.TagMapper">
+	<select id="findAll" resultMap="StandardResultMap">
+		SELECT * FROM tag
+	</select>
+	<select id="findById" resultMap="StandardResultMap">
+		SELECT * FROM tag WHERE t_id = #{t_id}
+	</select>
+	<resultMap id="StandardResultMap" type="test.myblog.model.Tag">
+		<id column="t_id" property="t_id"></id>
+		<result column="t_name" property="t_name"/>
+        <result column="t_pic" property="t_pic"/>
+        <collection column="t_id" property="articles" select="test.myblog.mapper.ArticleMapper.findById"/>
+	</resultMap>
+</mapper>

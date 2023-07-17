@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.ArticleMapper">
+	<select id="findById" resultMap="StandardResultMap">
+		SELECT * FROM article WHERE a_id = #{a_id}
+	</select>
+	<select id="findAll" resultMap="StandardResultMap">
+		SELECT * FROM article
+	</select>
+	<select id="findLastArticle" resultMap="StandardResultMap">
+		SELECT * FROM article ORDER BY a_id DESC LIMIT 1
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="a_id" parameterType="test.myblog.model.Article">
+		INSERT INTO article (a_content, a_date, a_likes, a_title, a_views, m_id, t_id) VALUES (#{a_content}, #{a_date}, #{a_likes}, #{a_title}, #{a_views}, #{m.m_id}, #{t.t_id})
+	</insert>
+	<insert id="saveArticleWithId">
+		INSERT INTO article (a_id, a_content, a_date, a_likes, a_title, a_views, m_id, t_id) VALUES (#{a_id}, #{a_content}, #{a_date}, #{a_likes}, #{a_title}, #{a_views}, #{m.m_id}, #{t.t_id})
+	</insert>
+	<select id="getCountOfArticleTable" resultMap="StandardResultMap">
+		SELECT * FROM article ORDER BY a_id DESC LIMIT 1
+	</select>
+	<select id="getCurrentViews" resultType="Integer">
+		SELECT a_views FROM article WHERE a_id = #{a_id}	
+	</select>
+	<update id="setNewViews">
+		UPDATE article SET a_views = #{newViews} WHERE a_id = #{aId}
+	</update>
+	<select id="getCurrentLikes" resultType="Integer">
+		SELECT a_likes FROM article WHERE a_id = #{a_id}
+	</select>
+	<update id="setNewLikes">
+		UPDATE article SET a_likes = #{newLikes} WHERE a_id = #{aId}
+	</update>
+	<select id="countPostByMid" resultType="Integer">
+		SELECT COUNT(*) FROM article WHERE m_id = #{mId}
+	</select>
+	<select id="findArticleListByTid" resultMap="StandardResultMap">
+		SELECT * FROM article WHERE t_id = #{tId}
+	</select>
+	<select id="getAViewsRanking" resultType="java.util.Map">
+		SELECT m_id AS m_id, SUM(a_likes) AS sum_likes, SUM(a_views) AS sum_views FROM article GROUP BY m_id ORDER BY SUM(a_views) DESC LIMIT 10
+	</select>
+	<select id="getALikesRanking" resultType="java.util.Map">
+		SELECT m_id AS m_id, SUM(a_likes) AS sum_likes, SUM(a_views) AS sum_views FROM article GROUP BY m_id ORDER BY SUM(a_likes) DESC LIMIT 10
+	</select>
+	<sql id="memberEntityFields">
+        m_id, m_about, m_authority, m_birthday, m_ctime, m_gender, m_ltime, m_name, m_password, m_pic, m_username
+    </sql>
+    <sql id="tagEntityFields">
+        t_id, t_name, t_pic
+    </sql>
+	<select id="findArticleByMid" resultMap="StandardResultMap">
+		SELECT * FROM article WHERE m_id = #{mId}
+	</select>
+	<resultMap id="StandardResultMap" type="test.myblog.model.Article">
+		<id column="a_id" property="a_id"/>
+		<result column="a_title" property="a_title"/>
+        <result column="a_content" property="a_content"/>
+        <result column="a_likes" property="a_likes"/>
+        <result column="a_views" property="a_views"/>
+        <result column="a_date" property="a_date"/>
+        <association column="t_id" property="t" select="test.myblog.mapper.TagMapper.findById"/>
+       <!--  <association column="t_id" property="t" javaType="test.myblog.model.Tag">
+			<id column="t_id" property="t_id"/>
+			<result column="t_name" property="t_name"/>
+        	<result column="t_pic" property="t_pic"/>
+		</association> -->
+		<association column="m_id" property="m" select="test.myblog.mapper.MemberMapper.findById"/>
+		<!-- <association column="m_id" property="m" javaType="test.myblog.model.Member">
+			<id column="m_id" property="m_id"/>
+			<result column="m_about" property="m_about"/>
+	        <result column="m_authority" property="m_authority"/>
+	        <result column="m_birthday" property="m_birthday"/>
+	        <result column="m_ctime" property="m_ctime"/>
+	        <result column="m_gender" property="m_gender"/>
+	        <result column="m_ltime" property="m_ltime"/>
+	        <result column="m_name" property="m_name"/>
+	        <result column="m_password" property="m_password"/>
+	        <result column="m_pic" property="m_pic"/>
+	        <result column="m_username" property="m_username"/>
+		</association> -->
+	</resultMap>
+</mapper>

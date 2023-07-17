@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.CommentLikesMapper">
+	<select id="findById" resultMap="StandardResultMap">
+		SELECT * FROM commentlikes WHERE cl_id = #{cl_id}
+	</select>
+	<select id="findAll" resultMap="StandardResultMap">
+		SELECT * FROM commentlikes
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="cl_id" parameterType="test.myblog.model.CommentLikes">
+		INSERT INTO commentlikes (c_id, m_id) VALUES (#{c.c_id}, #{m.m_id})
+	</insert>
+	<select id="checkIfMemberLikedComment" resultType="Integer">
+		SELECT COUNT(*) FROM commentlikes WHERE m_id = #{m_id} AND c_id = #{c_id}
+	</select>
+	<insert id="createByMidAndCid" useGeneratedKeys="true">
+		INSERT INTO commentlikes (c_id, m_id) VALUES (#{c_id}, #{m_id})
+	</insert>
+	<delete id="deleteByMidAndCid">
+		DELETE FROM commentlikes WHERE m_id = #{m_id} AND c_id = #{c_id}
+	</delete>
+	<resultMap id="StandardResultMap" type="test.myblog.model.CommentLikes">
+		<id column="cl_id" property="cl_id"/>
+		<association column="c_id" property="c" javaType="test.myblog.model.Comment">
+			<id column="c_id" property="c_id"/>
+			<result column="c_time" property="c_time"/>
+	        <result column="c_content" property="c_content"/>
+	        <result column="c_likes" property="c_likes"/>
+	        <association column="a_id" property="a" javaType="test.myblog.model.Article">
+				<id column="a_id" property="a_id"/>
+				<result column="a_title" property="a_title"/>
+		        <result column="a_content" property="a_content"/>
+		        <result column="a_likes" property="a_likes"/>
+		        <result column="a_views" property="a_views"/>
+		        <result column="a_date" property="a_date"/>
+		        <association column="t_id" property="t" javaType="test.myblog.model.Tag">
+					<id column="t_id" property="t_id"/>
+					<result column="t_name" property="t_name"/>
+		        	<result column="t_pic" property="t_pic"/>
+				</association>
+				<association column="m_id" property="m" javaType="test.myblog.model.Member">
+					<id column="m_id" property="m_id"/>
+					<result column="m_about" property="m_about"/>
+			        <result column="m_authority" property="m_authority"/>
+			        <result column="m_birthday" property="m_birthday"/>
+			        <result column="m_ctime" property="m_ctime"/>
+			        <result column="m_gender" property="m_gender"/>
+			        <result column="m_ltime" property="m_ltime"/>
+			        <result column="m_name" property="m_name"/>
+			        <result column="m_password" property="m_password"/>
+			        <result column="m_pic" property="m_pic"/>
+			        <result column="m_username" property="m_username"/>
+				</association>
+			</association>
+			<association column="m_id" property="m" javaType="test.myblog.model.Member">
+				<id column="m_id" property="m_id"/>
+				<result column="m_about" property="m_about"/>
+		        <result column="m_authority" property="m_authority"/>
+		        <result column="m_birthday" property="m_birthday"/>
+		        <result column="m_ctime" property="m_ctime"/>
+		        <result column="m_gender" property="m_gender"/>
+		        <result column="m_ltime" property="m_ltime"/>
+		        <result column="m_name" property="m_name"/>
+		        <result column="m_password" property="m_password"/>
+		        <result column="m_pic" property="m_pic"/>
+		        <result column="m_username" property="m_username"/>
+			</association>
+		</association>	
+        <association column="m_id" property="m" javaType="test.myblog.model.Member">
+        	<id column="m_id" property="m_id"/>
+			<result column="m_about" property="m_about"/>
+	        <result column="m_authority" property="m_authority"/>
+	        <result column="m_birthday" property="m_birthday"/>
+	        <result column="m_ctime" property="m_ctime"/>
+	        <result column="m_gender" property="m_gender"/>
+	        <result column="m_ltime" property="m_ltime"/>
+	        <result column="m_name" property="m_name"/>
+	        <result column="m_password" property="m_password"/>
+	        <result column="m_pic" property="m_pic"/>
+	        <result column="m_username" property="m_username"/>
+        </association>
+	</resultMap>
+</mapper>

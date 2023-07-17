@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.myblog.mapper.FollowerMapper">
+	<select id="findById" resultMap="StandardResultMap">
+		SELECT * FROM follower WHERE f_id = #{f_id}
+	</select>
+	<select id="findAll" resultMap="StandardResultMap">
+		SELECT * FROM follower
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="f_id" parameterType="test.myblog.model.Follower">
+		INSERT INTO follower (follower_id, m_id) VALUES (#{f.follower_id}, #{m.m_id})
+	</insert>
+	<delete id="deleteByMidAndFollowerid">
+		DELETE FROM follower WHERE m_id = #{m_id} AND follower_id = #{follower_id}
+	</delete>
+	<insert id="createByMidAndFollowerid" useGeneratedKeys="true">
+		INSERT INTO follower (m_id, follower_id) VALUES (#{m_id}, #{follower_id})
+	</insert>
+	<select id="countFollowed" resultType="Integer">
+		SELECT COUNT(*) FROM follower WHERE m_id = #{m_id}
+	</select>
+	<select id="countFollowing" resultType="Integer">
+		SELECT COUNT(*) FROM follower WHERE follower_id = #{m_id}
+	</select>
+	<select id="findFollowingListByMid" resultType="Integer">
+		SELECT m_id FROM follower WHERE follower_id = #{m_id}
+	</select>
+	<select id="findFollowedListByMid" resultType="Integer">
+		SELECT follower_id FROM follower WHERE m_id = #{m_id}
+	</select>
+	<select id="checkIfUserIsFollower" resultType="Integer">
+		SELECT COUNT(*) FROM follower WHERE follower_id = #{userId} AND m_id = #{mId}
+	</select>
+	<resultMap id="StandardResultMap" type="test.myblog.model.Follower">
+		<id column="f_id" property="f_id"/>
+		<association column="m_id" property="m" javaType="test.myblog.model.Member">
+			<id column="m_id" property="m_id"/>
+			<result column="m_about" property="m_about"/>
+	        <result column="m_authority" property="m_authority"/>
+	        <result column="m_birthday" property="m_birthday"/>
+	        <result column="m_ctime" property="m_ctime"/>
+	        <result column="m_gender" property="m_gender"/>
+	        <result column="m_ltime" property="m_ltime"/>
+	        <result column="m_name" property="m_name"/>
+	        <result column="m_password" property="m_password"/>
+	        <result column="m_pic" property="m_pic"/>
+	        <result column="m_username" property="m_username"/>
+		</association>
+		<association column="follower_id" property="f" javaType="test.myblog.model.Member">
+			<id column="m_id" property="m_id"/>
+			<result column="m_about" property="m_about"/>
+	        <result column="m_authority" property="m_authority"/>
+	        <result column="m_birthday" property="m_birthday"/>
+	        <result column="m_ctime" property="m_ctime"/>
+	        <result column="m_gender" property="m_gender"/>
+	        <result column="m_ltime" property="m_ltime"/>
+	        <result column="m_name" property="m_name"/>
+	        <result column="m_password" property="m_password"/>
+	        <result column="m_pic" property="m_pic"/>
+	        <result column="m_username" property="m_username"/>
+		</association>
+	</resultMap>
+</mapper>
